@@ -1,0 +1,41 @@
+.image-crop-wrapper {
+  display: flex;
+  justify-content: space-between;
+  max-width: 750px;
+  margin: 0 auto 30px;
+  .title-wrapper {
+    margin-bottom: 10px;
+    .size {
+      font-weight: 500;
+    }
+  }
+  .origin {
+    .crop-container {
+      position: relative;
+      width: 480px;
+      height: 480px;
+    }
+  }
+  .preview {
+    .preview-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 480px;
+      .image-preview {
+        margin-bottom: 10px;
+      }
+      .btn-save {
+        font-weight: 600;
+        margin-top: 5px;
+        padding: 10px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        &.hover {
+          background-color: '#252525';
+        }
+      }
+    }
+  }
+}

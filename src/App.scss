@@ -1,0 +1,17 @@
+.app-container {
+  min-height: 100vh;
+  width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin: 0 auto;
+  .header,
+  .footer {
+    text-align: center;
+  }
+}
+
+@media (min-width: 1000px) {
+  .app-container {
+    width: 80%;
+  }
+}
