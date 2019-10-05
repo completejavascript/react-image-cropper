@@ -5,7 +5,7 @@
   margin: 0 auto 30px;
   .title-wrapper {
     margin-bottom: 10px;
-    .size {
+    .title {
       font-weight: 500;
     }
   }
@@ -14,6 +14,8 @@
       position: relative;
       width: 480px;
       height: 480px;
+      border: 1px solid #707070;
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAAHdElNRQfeCBENACbm4LpqAAAAZElEQVQoU42P0Q3AIAhEgZXq/gNo042UelWIfLT1JRfI5QTknE+liSpapZSOYSzIrL/sB7HOBFCZ+dFKCLaGMPe++UODa63R6Z8p5fLJRrhxrISlJCJ+AhSCdoJNeg1+sRkkugGR3zdjbpAgFwAAAABJRU5ErkJggg==');
     }
   }
   .preview {
@@ -23,20 +25,9 @@
       justify-content: space-between;
       height: 480px;
       .preview-background {
-        background-color: #25252525;
+        border: 1px solid #909090;
         .image-preview {
           margin-bottom: 10px;
-        }
-      }
-      .btn-save {
-        font-weight: 600;
-        margin-top: 5px;
-        padding: 10px;
-        border: none;
-        outline: none;
-        cursor: pointer;
-        &.hover {
-          background-color: '#252525';
         }
       }
     }

@@ -64,3 +64,13 @@ export const getCroppedImg = async (
     });
   });
 };
+
+export const downloadBase64Image = (dataURL, name) => {
+  const ext = dataURL.split(';')[0].match(/jpeg|png|gif/)[0];
+  const a = document.createElement('a');
+  a.download = `${name}.${ext}`;
+  a.href = dataURL;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+};

@@ -4,7 +4,9 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.5.0",
+    "@material-ui/icons": "^4.4.3",
     "node-sass": "^4.12.0",
+    "prop-types": "^15.7.2",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-easy-crop": "^1.16.1",
