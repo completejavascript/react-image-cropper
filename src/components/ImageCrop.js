@@ -12,12 +12,12 @@ const Title = ({ text, width, height }) => (
 );
 
 const ImageCrop = props => {
-  const { toWidth, toHeight, image } = props;
+  const { toWidth, toHeight, image, onCrop } = props;
 
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-  const [rotation, setRotation] = useState(0);
-  const [aspect, setAspect] = useState(toWidth / toHeight);
+  const [rotation] = useState(0);
+  const [aspect] = useState(toWidth / toHeight);
   const [loadedSize, setLoadedSize] = useState({ width: 0, height: 0 });
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
@@ -27,7 +27,7 @@ const ImageCrop = props => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
 
-  const asyncGetCroppedImageToPreview = async (
+  const getCroppedImageToPreview = async (
     image,
     croppedAreaPixels,
     rotation
@@ -46,7 +46,7 @@ const ImageCrop = props => {
     }
   };
 
-  const asyncGetImageSize = async image => {
+  const getImageSize = async image => {
     try {
       if (image) {
         const { width, height } = await createImage(image);
@@ -57,12 +57,18 @@ const ImageCrop = props => {
     }
   };
 
+  const handleSave = () => {
+    if (onCrop) {
+      onCrop(croppedImage);
+    }
+  };
+
   useEffect(() => {
-    asyncGetCroppedImageToPreview(image, croppedAreaPixels, rotation);
+    getCroppedImageToPreview(image, croppedAreaPixels, rotation);
   }, [image, croppedAreaPixels, rotation]);
 
   useEffect(() => {
-    asyncGetImageSize(image);
+    getImageSize(image);
   }, [image]);
 
   return (
@@ -75,6 +81,8 @@ const ImageCrop = props => {
         />
         <div className="crop-container">
           <Cropper
+            minZoom={0.1}
+            maxZoom={3}
             image={image}
             crop={crop}
             zoom={zoom}
@@ -90,15 +98,26 @@ const ImageCrop = props => {
         <Title text="Preview Size" width={toWidth} height={toHeight} />
         <div className="preview-container">
           <div
-            className="image-preview"
+            className="preview-background"
             style={{
-              backgroundImage: `url(${croppedImage})`,
-              backggroundSize: `100% 100%`,
-              width: toWidth,
-              height: toHeight
+              width: toWidth > 288 || toHeight > 288 ? 288 : toWidth,
+              height: toWidth > 288 || toHeight > 288 ? 288 : toHeight
             }}
-          />
-          <button className="btn-save">Save</button>
+          >
+            <img
+              src={croppedImage}
+              alt="preview"
+              className="image-preview"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'scale-down'
+              }}
+            />
+          </div>
+          <button className="btn-save" onClick={handleSave}>
+            Save
+          </button>
         </div>
       </div>
     </div>

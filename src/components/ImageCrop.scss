@@ -1,7 +1,7 @@
 .image-crop-wrapper {
   display: flex;
   justify-content: space-between;
-  max-width: 750px;
+  max-width: 850px;
   margin: 0 auto 30px;
   .title-wrapper {
     margin-bottom: 10px;
@@ -22,8 +22,11 @@
       flex-direction: column;
       justify-content: space-between;
       height: 480px;
-      .image-preview {
-        margin-bottom: 10px;
+      .preview-background {
+        background-color: #25252525;
+        .image-preview {
+          margin-bottom: 10px;
+        }
       }
       .btn-save {
         font-weight: 600;
