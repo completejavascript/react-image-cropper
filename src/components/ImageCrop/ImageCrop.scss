@@ -1,6 +1,5 @@
 .image-crop-wrapper {
   display: flex;
-  // justify-content: space-between;
   max-width: 850px;
   margin: 0 auto 30px;
   .title-wrapper {
@@ -25,13 +24,25 @@
       flex-direction: column;
       justify-content: space-between;
       height: 480px;
-      .preview-background {
-        border: 1px solid #909090;
-        .image-preview {
-          margin-bottom: 10px;
+      .top {
+        .preview-background {
+          border: 1px solid #909090;
+          margin-bottom: 15px;
+          .image-preview {
+            margin-bottom: 10px;
+          }
+        }
+        .zoom-section {
+          display: flex;
+          .percentage-input {
+            width: 45px;
+          }
+          .value {
+            width: 10px;
+          }
         }
       }
-      .controls {
+      .bottom {
         .btn-save-wrapper {
           float: right;
         }
