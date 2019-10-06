@@ -108,7 +108,9 @@ const ZoomSection = ({
   );
 
   const handleOnChange = event => {
-    const newZoom = (Number(event.target.value) * adaptZoomBase) / 100;
+    const valueNumber = Number(event.target.value);
+    const fixedValue = valueNumber > 0 ? valueNumber : 0.1;
+    const newZoom = (fixedValue * adaptZoomBase) / 100;
     handleZoomChange('', newZoom);
   };
 
