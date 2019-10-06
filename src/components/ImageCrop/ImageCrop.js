@@ -65,7 +65,12 @@ const PreviewImage = ({
         width: largerPreviewSize ? PREVIEW_CONTAINER_SIZE : toWidth,
         height: largerPreviewSize ? PREVIEW_CONTAINER_SIZE : toHeight,
         backgroundImage: `url('images/fake-transparent.png')`,
-        backgroundRepeat: 'repeat'
+        backgroundRepeat: 'repeat',
+        border: '1px solid #909090',
+        marginBottom: '15px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
       }}
     >
       {croppedAreaPixels && (
