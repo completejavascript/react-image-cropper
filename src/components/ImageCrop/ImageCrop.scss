@@ -1,6 +1,6 @@
 .image-crop-wrapper {
   display: flex;
-  justify-content: space-between;
+  // justify-content: space-between;
   max-width: 850px;
   margin: 0 auto 30px;
   .title-wrapper {
@@ -19,6 +19,7 @@
     }
   }
   .preview {
+    margin-left: 75px;
     .preview-container {
       display: flex;
       flex-direction: column;
@@ -28,6 +29,11 @@
         border: 1px solid #909090;
         .image-preview {
           margin-bottom: 10px;
+        }
+      }
+      .controls {
+        .btn-save-wrapper {
+          float: right;
         }
       }
     }

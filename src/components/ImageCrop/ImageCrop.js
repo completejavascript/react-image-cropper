@@ -2,42 +2,11 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Cropper from 'react-easy-crop';
 import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import Slider from '@material-ui/core/Slider';
 import { createImage, getCroppedImg } from '../../utils/ImageHandler';
 import './ImageCrop.scss';
 
 const LOADED_IMAGE_CONTAINER_SIZE = 480;
-const PREVIEW_CONTAINER_SIDE = 288;
-
-const PrettoSlider = withStyles({
-  root: {
-    color: '#5665d7',
-    height: 4,
-    width: '280px',
-    float: 'left',
-    marginLeft: '0px'
-  },
-  thumb: {
-    height: 24,
-    width: 24,
-    backgroundColor: 'currentColor',
-    border: '2px solid currentColor',
-    marginTop: -10,
-    marginLeft: -12,
-    '&:focus,&:hover,&$active': {
-      boxShadow: 'inherit'
-    }
-  },
-  track: {
-    height: 4,
-    borderRadius: 4
-  },
-  rail: {
-    height: 4,
-    borderRadius: 4
-  }
-})(Slider);
+const PREVIEW_CONTAINER_SIZE = 288;
 
 const Title = ({ text, width, height }) => (
   <div className="title-wrapper">
@@ -49,19 +18,61 @@ const Title = ({ text, width, height }) => (
   </div>
 );
 
+const PreviewImage = ({
+  largerPreviewSize,
+  croppedAreaPixels,
+  toWidth,
+  toHeight,
+  image
+}) => {
+  return (
+    <div
+      className="preview-background"
+      style={{
+        width: largerPreviewSize ? PREVIEW_CONTAINER_SIZE : toWidth,
+        height: largerPreviewSize ? PREVIEW_CONTAINER_SIZE : toHeight,
+        backgroundImage: `url('images/fake-transparent.png')`,
+        backgroundRepeat: 'repeat'
+      }}
+    >
+      {croppedAreaPixels && (
+        <div
+          className="image-preview"
+          style={{
+            backgroundImage: `url(${image})`,
+            width: croppedAreaPixels.width,
+            height: croppedAreaPixels.height,
+            backgroundPosition: `${-croppedAreaPixels.x}px ${-croppedAreaPixels.y}px`,
+            backgroundRepeat: 'no-repeat',
+            zoom: largerPreviewSize
+              ? PREVIEW_CONTAINER_SIZE /
+                Math.max(croppedAreaPixels.width, croppedAreaPixels.height)
+              : Math.min(
+                  toWidth / croppedAreaPixels.width,
+                  toHeight / croppedAreaPixels.height
+                )
+          }}
+        />
+      )}
+    </div>
+  );
+};
+
 const ImageCrop = props => {
   const { toWidth, toHeight, image, onCrop, minZoom, maxZoom } = props;
   const cropSize = {
     width: toWidth,
     height: toHeight
   };
+  const largerPreviewSize =
+    toWidth > PREVIEW_CONTAINER_SIZE || toHeight > PREVIEW_CONTAINER_SIZE;
+  let adaptZoomBase = 1;
 
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [rotation] = useState(0);
   const [aspect] = useState(toWidth / toHeight);
   const [loadedSize, setLoadedSize] = useState({ width: 0, height: 0 });
-  const [croppedImage, setCroppedImage] = useState(null);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
   const onImageLoaded = imageSize => {
@@ -74,32 +85,34 @@ const ImageCrop = props => {
       );
     }
 
-    if (imageSize.naturalWidth > LOADED_IMAGE_CONTAINER_SIZE) {
-      setZoom(imageSize.naturalWidth / LOADED_IMAGE_CONTAINER_SIZE);
+    adaptZoomBase = Math.max(
+      imageSize.naturalWidth / LOADED_IMAGE_CONTAINER_SIZE,
+      imageSize.naturalHeight / LOADED_IMAGE_CONTAINER_SIZE
+    );
+
+    if (adaptZoomBase > 1) {
+      setZoom(adaptZoomBase);
+    } else {
+      adaptZoomBase = 1;
     }
   };
 
   const onCropComplete = (newCroppedArea, newCroppedAreaPixels) => {
-    console.log('onCropComplete', newCroppedArea, newCroppedArea);
-    if (!croppedAreaPixels) getCroppedImageToPreview(newCroppedAreaPixels);
+    console.log('onCropComplete', newCroppedArea, newCroppedAreaPixels, zoom);
     setCroppedAreaPixels(newCroppedAreaPixels);
   };
 
-  const onInteractionEnd = () => {
-    getCroppedImageToPreview();
-  };
-
-  const getCroppedImageToPreview = async currCroppedAreaPixels => {
-    const finalCroppedAreaPixels = currCroppedAreaPixels || croppedAreaPixels;
-
-    if (image && finalCroppedAreaPixels) {
+  const getCroppedImageToPreview = async () => {
+    if (image) {
       const croppedImage = await getCroppedImg(
         image,
-        finalCroppedAreaPixels,
+        croppedAreaPixels,
         rotation
       );
-      setCroppedImage(croppedImage);
+      return croppedImage;
     }
+
+    return null;
   };
 
   const getImageSize = async image => {
@@ -113,13 +126,9 @@ const ImageCrop = props => {
     }
   };
 
-  const handleZoomChange = (_, zoom) => {
-    console.log('zoom change', zoom);
-    setZoom(zoom);
-  };
-
-  const handleSave = () => {
+  const handleSave = async () => {
     if (onCrop) {
+      const croppedImage = await getCroppedImageToPreview();
       onCrop(croppedImage);
     }
   };
@@ -149,7 +158,7 @@ const ImageCrop = props => {
             onZoomChange={setZoom}
             onCropComplete={onCropComplete}
             onImageLoaded={onImageLoaded}
-            onInteractionEnd={onInteractionEnd}
+            restrictPosition={false}
             classes={{
               containerClassName: 'cropper-container',
               imageClassName: 'image',
@@ -160,57 +169,32 @@ const ImageCrop = props => {
       </div>
 
       <div className="preview">
-        <Title text="Preview" width={toWidth} height={toHeight} />
+        {croppedAreaPixels && (
+          <Title
+            text="Preview"
+            width={croppedAreaPixels.width}
+            height={croppedAreaPixels.height}
+          />
+        )}
         <div className="preview-container">
-          <div
-            className="preview-background"
-            style={{
-              width:
-                toWidth > PREVIEW_CONTAINER_SIDE ||
-                toHeight > PREVIEW_CONTAINER_SIDE
-                  ? PREVIEW_CONTAINER_SIDE
-                  : toWidth,
-              height:
-                toWidth > PREVIEW_CONTAINER_SIDE ||
-                toHeight > PREVIEW_CONTAINER_SIDE
-                  ? PREVIEW_CONTAINER_SIDE
-                  : toHeight,
-              backgroundImage: `url('images/fake-transparent.png')`,
-              backgroundRepeat: 'repeat'
-            }}
-          >
-            {croppedImage && (
-              <img
-                src={croppedImage}
-                alt="preview"
-                className="image-preview"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'contain'
-                }}
-              />
-            )}
-          </div>
+          <PreviewImage
+            largerPreviewSize={largerPreviewSize}
+            croppedAreaPixels={croppedAreaPixels}
+            toWidth={toWidth}
+            toHeight={toHeight}
+            image={image}
+          />
           <div className="controls">
-            <div className="zoom-section">
-              <PrettoSlider
-                value={zoom}
-                min={minZoom}
-                max={maxZoom}
-                step={0.1}
-                aria-labelledby="Zoom"
-                onChange={handleZoomChange}
-              />
+            <div className="btn-save-wrapper">
+              <Button
+                className="btn-save"
+                onClick={handleSave}
+                variant="contained"
+                color="primary"
+              >
+                Save
+              </Button>
             </div>
-            <Button
-              className="btn-save"
-              onClick={handleSave}
-              variant="contained"
-              color="primary"
-            >
-              Save
-            </Button>
           </div>
         </div>
       </div>
@@ -229,7 +213,7 @@ ImageCrop.propTypes = {
 
 ImageCrop.defaultProps = {
   minZoom: 0.1,
-  maxZoom: 50
+  maxZoom: 25
 };
 
 export default ImageCrop;
