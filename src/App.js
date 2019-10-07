@@ -3,6 +3,7 @@ import ImageCrop from './components/ImageCrop/ImageCrop';
 import { downloadBase64Image } from './utils/ImageHandler';
 import './App.scss';
 
+// const imgURL = 'images/wall_paper_5_1920_3232.jpg';
 const imgURL = 'images/dog_1910x1000_test.jpeg';
 // const imgURL = 'images/dog_1000x1910_test.jpeg';
 // const imgURL = 'images/wall_paper_400x400.jpg';

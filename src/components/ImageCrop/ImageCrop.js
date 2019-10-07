@@ -177,29 +177,40 @@ const ImageCrop = props => {
       );
     }
 
+    // Calculate init zoom value
     if (
       naturalWidth > LOADED_IMAGE_CONTAINER_SIZE ||
       naturalHeight > LOADED_IMAGE_CONTAINER_SIZE
     ) {
-      // Zoom by container's size
-      const widthRatio = naturalWidth / LOADED_IMAGE_CONTAINER_SIZE;
-      const heightRatio = naturalHeight / LOADED_IMAGE_CONTAINER_SIZE;
-      const zoomValue =
-        widthRatio < heightRatio
-          ? naturalWidth / toWidth
-          : naturalHeight / toHeight;
-
-      setZoom(zoomValue);
-      setAdaptZoomBase(zoomValue);
+      if (
+        toWidth < LOADED_IMAGE_CONTAINER_SIZE &&
+        toHeight < LOADED_IMAGE_CONTAINER_SIZE
+      ) {
+        // Keep crop area, zoom image by container's size
+        const widthRatio = naturalWidth / LOADED_IMAGE_CONTAINER_SIZE;
+        const heightRatio = naturalHeight / LOADED_IMAGE_CONTAINER_SIZE;
+        const zoomValue =
+          widthRatio < heightRatio
+            ? naturalWidth / toWidth
+            : naturalHeight / toHeight;
+        setZoom(zoomValue);
+        setAdaptZoomBase(zoomValue);
+      } else {
+        // Zoom crop size and image
+        const widthRatio = naturalWidth / toWidth;
+        const heightRatio = naturalHeight / toHeight;
+        const zoomValue = Math.min(widthRatio, heightRatio);
+        setZoom(zoomValue);
+        setAdaptZoomBase(zoomValue);
+      }
     } else {
-      // Zoom by loaded image's size
+      // Keep crop area, zoom image by crop area's size
       const widthRatio = naturalWidth / toWidth;
       const heightRatio = naturalHeight / toHeight;
       const zoomValue =
         widthRatio < heightRatio
           ? naturalWidth / toWidth
           : naturalHeight / toHeight;
-
       setZoom(zoomValue);
       setAdaptZoomBase(zoomValue);
     }
