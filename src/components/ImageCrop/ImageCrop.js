@@ -157,10 +157,6 @@ const SaveSection = ({ handleSave }) => {
 
 const ImageCrop = props => {
   const { toWidth, toHeight, image, onCrop, minZoom, maxZoom } = props;
-  const cropSize = {
-    width: toWidth,
-    height: toHeight
-  };
   const largerPreviewSize =
     toWidth > PREVIEW_CONTAINER_SIZE || toHeight > PREVIEW_CONTAINER_SIZE;
 
@@ -182,26 +178,34 @@ const ImageCrop = props => {
     }
 
     if (
-      imageSize.naturalWidth > LOADED_IMAGE_CONTAINER_SIZE ||
-      imageSize.naturalHeight > LOADED_IMAGE_CONTAINER_SIZE
+      naturalWidth > LOADED_IMAGE_CONTAINER_SIZE ||
+      naturalHeight > LOADED_IMAGE_CONTAINER_SIZE
     ) {
-      const zoomValue = Math.max(
-        imageSize.naturalWidth / LOADED_IMAGE_CONTAINER_SIZE,
-        imageSize.naturalHeight / LOADED_IMAGE_CONTAINER_SIZE
-      );
+      // Zoom by container's size
+      const widthRatio = naturalWidth / LOADED_IMAGE_CONTAINER_SIZE;
+      const heightRatio = naturalHeight / LOADED_IMAGE_CONTAINER_SIZE;
+      const zoomValue =
+        widthRatio < heightRatio
+          ? naturalWidth / toWidth
+          : naturalHeight / toHeight;
+
+      setZoom(zoomValue);
+      setAdaptZoomBase(zoomValue);
+    } else {
+      // Zoom by loaded image's size
+      const widthRatio = naturalWidth / toWidth;
+      const heightRatio = naturalHeight / toHeight;
+      const zoomValue =
+        widthRatio < heightRatio
+          ? naturalWidth / toWidth
+          : naturalHeight / toHeight;
+
       setZoom(zoomValue);
       setAdaptZoomBase(zoomValue);
     }
   };
 
-  const onCropComplete = (newCroppedArea, newCroppedAreaPixels) => {
-    console.log(
-      'onCropComplete',
-      newCroppedArea,
-      newCroppedAreaPixels,
-      zoom,
-      adaptZoomBase
-    );
+  const onCropComplete = (_, newCroppedAreaPixels) => {
     setCroppedAreaPixels(newCroppedAreaPixels);
   };
 
@@ -260,7 +264,6 @@ const ImageCrop = props => {
             crop={crop}
             zoom={zoom}
             aspect={aspect}
-            cropSize={cropSize}
             onCropChange={setCrop}
             onZoomChange={setZoom}
             onCropComplete={onCropComplete}
