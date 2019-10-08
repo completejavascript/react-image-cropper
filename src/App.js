@@ -26,8 +26,9 @@ const App = () => {
       <ImageCrop
         image={imgURL}
         toWidth={400}
-        toHeight={500}
+        toHeight={400}
         onCrop={handleOnCrop}
+        fixedSize={true}
       />
 
       <footer className="footer">

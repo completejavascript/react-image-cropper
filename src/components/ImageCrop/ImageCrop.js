@@ -128,10 +128,12 @@ const ImageCrop = props => {
           // Keep crop box is smaller than container (480x480)
           if (newCropBoxWidth <= 450 && newCropBoxHeight <= 450) {
             setAdaptZoomBase(curAdaptZoomBase);
-            setCropBoxSize({
-              width: newCropBoxWidth,
-              height: newCropBoxHeight
-            });
+            if (fixedSize) {
+              setCropBoxSize({
+                width: newCropBoxWidth,
+                height: newCropBoxHeight
+              });
+            }
           } else {
             e.preventDefault();
           }
@@ -143,16 +145,16 @@ const ImageCrop = props => {
       cropper && cropper.destroy();
       document.body.removeEventListener('keydown', handleKeyDown);
     };
-  }, [toWidth, toHeight, loadedSize]);
+  }, [toWidth, toHeight, loadedSize, fixedSize]);
 
   useEffect(() => {
-    if (cropper && cropStatus === 'end') {
+    if (cropper && cropStatus === 'end' && fixedSize) {
       setCropBoxSize({
         width: toWidth / adaptZoomBase,
         height: toHeight / adaptZoomBase
       });
     }
-  }, [cropStatus, adaptZoomBase, toWidth, toHeight]);
+  }, [cropStatus, adaptZoomBase, toWidth, toHeight, fixedSize]);
 
   useEffect(() => {
     cropper && cropper.setCropBoxData(cropBoxSize);
