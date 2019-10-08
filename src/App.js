@@ -1,10 +1,11 @@
 import React from 'react';
 import ImageCrop from './components/ImageCrop/ImageCrop';
-import { downloadBase64Image } from './utils/ImageHandler';
+import { downloadBase64Image } from './utils/helpers/ImageHandler';
 import './App.scss';
 
+const imgURL = 'images/wall_paper_1200_2480.jpg';
 // const imgURL = 'images/wall_paper_5_1920_3232.jpg';
-const imgURL = 'images/dog_1910x1000_test.jpeg';
+// const imgURL = 'images/dog_1910x1000_test.jpeg';
 // const imgURL = 'images/dog_1000x1910_test.jpeg';
 // const imgURL = 'images/wall_paper_400x400.jpg';
 // const imgURL = 'images/wall_paper_300x400.jpg';
@@ -24,8 +25,8 @@ const App = () => {
 
       <ImageCrop
         image={imgURL}
-        toWidth={300}
-        toHeight={400}
+        toWidth={400}
+        toHeight={500}
         onCrop={handleOnCrop}
       />
 

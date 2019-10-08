@@ -1,0 +1,47 @@
+.image-crop-wrapper {
+  display: flex;
+  max-width: 850px;
+  margin: 0 auto 30px;
+  .title-wrapper {
+    margin-bottom: 10px;
+    .title {
+      font-weight: 500;
+    }
+  }
+  .origin {
+    .crop-container {
+      position: relative;
+      width: 480px;
+      height: 480px;
+      border: 1px solid #707070;
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAAHdElNRQfeCBENACbm4LpqAAAAZElEQVQoU42P0Q3AIAhEgZXq/gNo042UelWIfLT1JRfI5QTknE+liSpapZSOYSzIrL/sB7HOBFCZ+dFKCLaGMPe++UODa63R6Z8p5fLJRrhxrISlJCJ+AhSCdoJNeg1+sRkkugGR3zdjbpAgFwAAAABJRU5ErkJggg==');
+    }
+  }
+  .preview {
+    margin-left: 75px;
+    .preview-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 480px;
+      .top {
+        .zoom-section {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .percentage-input {
+            width: 45px;
+          }
+          .value {
+            width: 10px;
+          }
+        }
+      }
+      .bottom {
+        .btn-save-wrapper {
+          float: right;
+        }
+      }
+    }
+  }
+}
